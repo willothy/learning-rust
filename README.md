@@ -1,0 +1,1 @@
+This is just a collection of small projects I did while learning Rust. Some are from 'The Book', some are from LeetCode, and some may be from other places.
