@@ -48,7 +48,7 @@ impl<T: PartialOrd + Copy + Default> LinkedList<T> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::LinkedList;
 
     #[test]
     fn test_linked_list() {
