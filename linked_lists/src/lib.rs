@@ -61,11 +61,11 @@ impl<T: PartialOrd> LinkedList<T> {
         }
     }
 
-    pub fn get_at(&mut self, index: usize) -> Option<(T, Box<LinkedList<T>>)> {
-        let mut current: &mut LinkedList<T> = self;
+    pub fn get_at(&self, index: usize) -> Option<(T, Box<LinkedList<T>>)> {
+        let mut current: &LinkedList<T> = self;
         for i in 0..index {
             match current.0 {
-                Some((_, ref mut child)) => current = child,
+                Some((_, ref child)) => current = child,
                 None => break,
             }
         }
@@ -88,6 +88,6 @@ mod tests {
         ll.push_back(12);
         ll.push_back(9);
 
-        assert_eq!(ll, 0);
+        println!("{:?}", ll);
     }
 }
