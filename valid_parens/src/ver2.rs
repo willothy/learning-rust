@@ -6,7 +6,7 @@ fn main() {
 
 // This was my second attempt at the problem
 // I removed the use of an enum as it wasn't necessary
-// I realize now that I should have just use chars instead of i8s and would've been far more readable
+// I should have just used chars instead of i8s and would've been far more readable
 // I also should have used match instead of if statements in the close paren matches
 pub fn is_valid(s: String) -> bool {
     let mut open_parens: Vec<i8> = Vec::new();
