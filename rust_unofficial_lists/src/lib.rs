@@ -5,6 +5,15 @@ pub struct List<T> {
     head: Link<T>,
 }
 
+impl<T> Drop for List<T> {
+    fn drop(&mut self) {
+        let mut current = mem::replace(&mut self.head, Link::Empty);
+        while let Link::More(mut boxed_node) = current {
+            current = mem::replace(&mut boxed_node.next, Link::Empty);
+        }
+    }
+}
+
 enum Link<T> {
     Empty,
     More(Box<Node<T>>),
@@ -52,7 +61,7 @@ impl<T: Copy> List<T> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::List;
 
     #[test]
     fn basics() {
@@ -68,6 +77,7 @@ mod tests {
         assert_eq!(list.pop(), Some(3));
         assert_eq!(list.pop(), Some(2));
         assert_eq!(list.pop(), Some(1));
+        assert_eq!(list.pop(), None);
         assert_eq!(v, vec![1, 2, 3]);
     }
 }
