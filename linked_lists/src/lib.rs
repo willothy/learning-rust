@@ -1,8 +1,7 @@
-
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct LinkedList<T>(Option<(T, Box<LinkedList<T>>)>);
 
-impl<T: PartialOrd> LinkedList<T> {
+impl<T: PartialOrd + Copy + Default> LinkedList<T> {
     pub fn new() -> Self {
         LinkedList(None)
     }
@@ -21,7 +20,7 @@ impl<T: PartialOrd> LinkedList<T> {
 
     pub fn insert(&mut self, data: T, index: usize) {
         let mut current: &mut LinkedList<T> = self;
-        for i in 0..index {
+        for _ in 0..index {
             match current.0 {
                 Some((_, ref mut child)) => current = child,
                 None => break,
@@ -31,47 +30,17 @@ impl<T: PartialOrd> LinkedList<T> {
         current.0 = Some((data, Box::new(LinkedList(t))));
     }
 
-    pub fn insert_sorted(&mut self, data: T) {
-        let mut current: &mut LinkedList<T>;
-        match self.0 {
-            Some((val, ref mut child)) => {
-                if data.lt(&val) {
-                    self.push_front(data);
-                    return;
-                } else {
-                    current = child;
-                }
-            },
-            None => self.push_front(data),
-        }
-        
-        loop {
-            match current.0 {
-                Some((val, ref mut child)) => {
-                    if data.lt(val) {
-                        let t = current.0.take();
-                        current.0 = Some((data, Box::new(LinkedList(t))));
-                        return;
-                    } else {
-                        current = child;
-                    }
-                },
-                None => return,
-            }
-        }
-    }
-
-    pub fn get_at(&self, index: usize) -> Option<(T, Box<LinkedList<T>>)> {
-        let mut current: &LinkedList<T> = self;
-        for i in 0..index {
+    pub fn get_at(& self, index: usize) -> Option<T> {
+        let mut current: & LinkedList<T> = self;
+        for _ in 0..index {
             match current.0 {
                 Some((_, ref child)) => current = child,
                 None => break,
             }
         }
-        let v = current.0;
-        match v {
-            Some(v) => Some(v),
+
+        match current.0.clone() {
+            Some(v) => Some(v.0),
             None => None,
         }
     }
@@ -84,10 +53,12 @@ mod tests {
     #[test]
     fn test_linked_list() {
         let mut ll = LinkedList::new();
-        ll.push_back(3);
-        ll.push_back(12);
-        ll.push_back(9);
+        ll.push_front(0);
+        ll.push_front(5);
+        ll.push_front(8);
 
-        println!("{:?}", ll);
+        assert_eq!(ll.get_at(0), Some(8));
+        assert_eq!(ll.get_at(1), Some(5));
+        assert_eq!(ll.get_at(2), Some(0));
     }
 }
